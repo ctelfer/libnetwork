@@ -2113,6 +2113,7 @@ func (n *network) lbEndpointName() string {
 }
 
 func (n *network) createLoadBalancerSandbox() error {
+	var err error
 	sandboxName := n.lbSandboxName()
 	sbOptions := []SandboxOption{}
 	if n.ingress {
@@ -2147,10 +2148,13 @@ func (n *network) createLoadBalancerSandbox() error {
 		}
 	}()
 
-	if err := ep.Join(sb, nil); err != nil {
+	err = ep.Join(sb, nil)
+	if err != nil {
 		return err
 	}
-	return sb.EnableService()
+
+	err = sb.EnableService()
+	return err
 }
 
 func (n *network) deleteLoadBalancerSandbox() error {
